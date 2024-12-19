@@ -34,7 +34,8 @@ RUN npm install
 COPY ./frontend /app/frontend
 
 # Copier le fichier .env contenant les variables d'environnement
-COPY ./expense-tracker_fullstack/.env /app/backend/.env
+COPY .env /app/backend/.env
+
 
 # Exposer les ports pour le frontend (3000) et le backend (5000)
 EXPOSE 3000 5000
