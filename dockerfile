@@ -11,7 +11,7 @@
 # EXPOSE 3000
 
 # CMD [ "npm" ,"start" ]
-# Utiliser l'image Node.js de base
+
 FROM node:20-alpine
 
 # Définir les répertoires de travail pour le frontend et le backend
