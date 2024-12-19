@@ -12,38 +12,44 @@
 
 # CMD [ "npm" ,"start" ]
 
+# Base image
 FROM node:20-alpine
 
-# Définir les répertoires de travail pour le frontend et le backend
+# Set working directory
 WORKDIR /app
 
-# Copier et installer les dépendances du backend
+# Copy and install backend dependencies
 COPY ./backend/package.json ./backend/package-lock.json ./backend/
 WORKDIR /app/backend
 RUN npm install
 
-# Copier le code source du backend
+# Copy backend source code
 COPY ./backend /app/backend
 
-# Copier et installer les dépendances du frontend
+# Copy and install frontend dependencies
 WORKDIR /app/frontend
 COPY ./frontend/package.json ./frontend/package-lock.json ./
 RUN npm install
 
-# Copier le code source du frontend
+# Copy frontend source code
 COPY ./frontend /app/frontend
 
-# Copier le fichier .env contenant les variables d'environnement
+# Copy environment variables
+WORKDIR /app/backend
 COPY .env /app/backend/.env
 
-
-# Exposer les ports pour le frontend (3000) et le backend (5000)
-EXPOSE 3000 5000
-
-# Construire le frontend
+# Build the frontend
 WORKDIR /app/frontend
 RUN npm run build
 
-# Définir le script d'entrée qui va démarrer le frontend et le backend
+# Expose backend and frontend ports
+EXPOSE 5000
+EXPOSE 3000
+
+# Install serve globally (if not already included in the dependencies)
+RUN npm install -g serve
+
+# Start both frontend and backend
+WORKDIR /app
 CMD ["sh", "-c", "npm start --prefix /app/backend & serve -s /app/frontend/build -l 3000"]
 
