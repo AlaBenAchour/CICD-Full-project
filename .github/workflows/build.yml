@@ -23,13 +23,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16' # Specify your desired Node.js version
+          node-version: '16'
+
+      # Change directory to the folder where package.json is located
+      - name: Navigate to frontend directory
+        run: cd frontend
 
       # Install dependencies
       - name: Install Dependencies
         run: |
           npm install
-          npm install --save @testing-library/react @testing-library/jest-dom # Install RTL dependencies
+          npm install --save @testing-library/react @testing-library/jest-dom
 
       # Run Jest tests
       - name: Run Jest Tests
