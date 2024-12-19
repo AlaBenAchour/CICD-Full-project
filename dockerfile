@@ -67,6 +67,7 @@
 # # Démarrer à la fois le frontend et le backend dans un seul conteneur
 # CMD ["sh", "-c", "npm start --prefix /app/backend & serve -s /app/frontend/build -l 3000"]
 # Step 1: Build the backend
+# Step 1: Build the backend
 FROM node:20-alpine AS backend-build
 
 WORKDIR /app/backend
@@ -89,18 +90,18 @@ FROM node:20-alpine
 WORKDIR /app
 COPY --from=backend-build /app/backend /app/backend
 COPY --from=frontend-build /app/frontend/build /app/frontend/build
-RUN npm install -g serve
+RUN npm install -g serve pm2
 
-# Expose ports
+# Expose ports for backend and frontend
 EXPOSE 5000
 EXPOSE 3000
 
 # Copy .env file for backend
 COPY .env /app/backend/.env
 
-# Add a script to wait for the backend to be ready before starting the frontend
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
+# Install pm2 globally for process management
+RUN npm install -g pm2
 
-# Start the backend and frontend
-CMD ["sh", "-c", "/wait-for-it.sh localhost:5000 -- npm start --prefix /app/backend & serve -s /app/frontend/build -l 3000"]
+# Define the command to run both backend and frontend with pm2
+CMD pm2 start /app/backend/index.js --name backend && pm2 serve /app/frontend/build --name frontend -l 3000 && pm2 logs
+
