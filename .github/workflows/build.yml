@@ -10,7 +10,6 @@ on:
       - main
 
 jobs:
-  # Step 1: Testing
   test:
     runs-on: ubuntu-20.04
 
@@ -32,17 +31,20 @@ jobs:
       # Install dependencies
       - name: Install Dependencies
         run: |
+          cd frontend
           npm install
           npm install --save @testing-library/react @testing-library/jest-dom
 
       # Run Jest tests
       - name: Run Jest Tests
         run: |
+          cd frontend
           npm test -- --ci --coverage
 
       # Run RTL tests
       - name: Run React Testing Library Tests
         run: |
+          cd frontend
           npm run test -- --ci --coverage --testPathPattern=src/**/*.test.js
 
   # Step 2: Build and Push Docker Image
